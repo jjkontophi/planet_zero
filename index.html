@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Antigravity 減碳 App — 每日環保行動追蹤</title>
+    <meta name="description" content="透過 Antigravity 追蹤每日減碳行動，培育你的專屬星球，讓環保成為一種習慣。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- ========== Desktop Sidebar ========== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">🌍</span>
+                <span class="brand-text">Antigravity</span>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="sidebar-item active" data-target="view-home" id="sidebar-home">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>星球培育</span>
+                </button>
+                <button class="sidebar-item" data-target="view-camera" id="sidebar-camera">
+                    <i class="fa-solid fa-camera"></i>
+                    <span>光盤打卡</span>
+                </button>
+                <button class="sidebar-item" data-target="view-summary" id="sidebar-summary">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>零碳結算</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="theme-toggle-btn" id="theme-toggle-desktop">
+                    <i class="fa-solid fa-sun theme-icon-light"></i>
+                    <i class="fa-solid fa-moon theme-icon-dark"></i>
+                    <span class="toggle-label">切換主題</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ========== Main Content Wrapper ========== -->
+        <div class="main-wrapper">
+            <!-- Mobile Top Bar -->
+            <header class="mobile-header" id="mobile-header">
+                <div class="mobile-brand">
+                    <span class="brand-icon-m">🌍</span>
+                    <h1 class="mobile-title">Antigravity</h1>
+                </div>
+                <button class="theme-toggle-btn-mobile" id="theme-toggle-mobile" aria-label="Toggle theme">
+                    <i class="fa-solid fa-sun theme-icon-light"></i>
+                    <i class="fa-solid fa-moon theme-icon-dark"></i>
+                </button>
+            </header>
+
+            <!-- ===== View: Home — Planet Cultivation ===== -->
+            <section id="view-home" class="view active">
+                <div class="view-scroll">
+                    <div class="view-inner home-grid">
+                        <!-- Planet Hero with Progress Ring -->
+                        <div class="planet-hero">
+                            <div class="planet-ring-wrapper">
+                                <svg class="progress-ring" viewBox="0 0 220 220" aria-label="Planet energy progress">
+                                    <circle cx="110" cy="110" r="96" class="ring-track"/>
+                                    <circle cx="110" cy="110" r="96" class="ring-fill" id="progress-ring-fill"/>
+                                </svg>
+                                <div class="planet-img-frame">
+                                    <img id="planet-img" src="assets/planet_earth.png" alt="Current Planet">
+                                </div>
+                            </div>
+                            <div class="planet-meta">
+                                <h2 id="planet-name">蔚藍地球</h2>
+                                <p class="progress-text" id="progress-label">0 / 100 Pts</p>
+                            </div>
+                            <button class="btn-pill ghost btn-explore" id="btn-change-bg">
+                                <i class="fa-solid fa-rocket"></i> 探索圖鑑
+                            </button>
+                        </div>
+
+                        <!-- Daily Green Habits -->
+                        <div class="card daily-tasks-card">
+                            <div class="card-head">
+                                <h3>🌿 今日綠色習慣</h3>
+                            </div>
+                            <div class="task-list" id="task-list">
+                                <label class="task-item" for="cb-cup">
+                                    <input type="checkbox" id="cb-cup" class="task-checkbox" data-task-id="task-cup" data-points="10" data-carbon="0.2">
+                                    <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
+                                    <span class="task-info">
+                                        <span class="task-name">自備環保杯</span>
+                                        <span class="task-desc">減少一次性紙杯使用</span>
+                                    </span>
+                                    <span class="task-pts">+10</span>
+                                </label>
+                                <label class="task-item" for="cb-bag">
+                                    <input type="checkbox" id="cb-bag" class="task-checkbox" data-task-id="task-bag" data-points="15" data-carbon="0.3">
+                                    <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
+                                    <span class="task-info">
+                                        <span class="task-name">使用環保袋</span>
+                                        <span class="task-desc">購物自備環保袋</span>
+                                    </span>
+                                    <span class="task-pts">+15</span>
+                                </label>
+                                <label class="task-item" for="cb-transport">
+                                    <input type="checkbox" id="cb-transport" class="task-checkbox" data-task-id="task-transport" data-points="20" data-carbon="1.5">
+                                    <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
+                                    <span class="task-info">
+                                        <span class="task-name">搭乘大眾運輸</span>
+                                        <span class="task-desc">選擇公車或捷運出行</span>
+                                    </span>
+                                    <span class="task-pts">+20</span>
+                                </label>
+                                <label class="task-item" for="cb-stairs">
+                                    <input type="checkbox" id="cb-stairs" class="task-checkbox" data-task-id="task-stairs" data-points="10" data-carbon="0.1">
+                                    <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
+                                    <span class="task-info">
+                                        <span class="task-name">爬樓梯取代電梯</span>
+                                        <span class="task-desc">節能減碳從小事做起</span>
+                                    </span>
+                                    <span class="task-pts">+10</span>
+                                </label>
+                                <label class="task-item" for="cb-light">
+                                    <input type="checkbox" id="cb-light" class="task-checkbox" data-task-id="task-light" data-points="5" data-carbon="0.05">
+                                    <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
+                                    <span class="task-info">
+                                        <span class="task-name">隨手關燈省電</span>
+                                        <span class="task-desc">離開房間即關閉電源</span>
+                                    </span>
+                                    <span class="task-pts">+5</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== View: Camera — Light Plate Check-in ===== -->
+            <section id="view-camera" class="view">
+                <div class="view-scroll">
+                    <div class="view-inner camera-inner">
+                        <div class="section-header">
+                            <h2>📸 光盤行動</h2>
+                            <div class="pts-badge" id="camera-pts-badge">
+                                <i class="fa-solid fa-star"></i>
+                                <span id="current-points-camera">0</span> Pts
+                            </div>
+                        </div>
+
+                        <div class="card camera-card">
+                            <div class="img-preview" id="img-preview-box">
+                                <div class="preview-empty" id="preview-empty">
+                                    <i class="fa-solid fa-camera-retro"></i>
+                                    <p>拍攝空盤以獲取能量</p>
+                                </div>
+                                <img id="preview-img" src="" alt="Photo Preview">
+                            </div>
+                            <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+                            <div class="camera-btns">
+                                <button class="btn-pill primary large" id="btn-open-camera">
+                                    <i class="fa-solid fa-camera"></i> 開啟相機
+                                </button>
+                                <button class="btn-pill secondary" id="btn-submit-photo" disabled>
+                                    <span class="btn-label">上傳審核</span>
+                                    <i class="fa-solid fa-spinner fa-spin spin-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== View: Summary — Zero Carbon ===== -->
+            <section id="view-summary" class="view">
+                <div class="view-scroll">
+                    <div class="view-inner summary-inner">
+                        <div class="section-header">
+                            <h2>📊 零碳總結</h2>
+                        </div>
+
+                        <div class="summary-grid">
+                            <div class="card stat-card">
+                                <p class="stat-label">今日減碳總量</p>
+                                <div class="stat-display">
+                                    <span class="stat-number" id="total-carbon-val">0.0</span>
+                                    <span class="stat-unit">kg CO₂e</span>
+                                </div>
+                            </div>
+
+                            <div class="card details-card">
+                                <div class="accordion" id="accordion">
+                                    <details open>
+                                        <summary>
+                                            <span class="acc-title"><i class="fa-solid fa-utensils"></i> 光盤行動</span>
+                                            <span class="acc-val" id="summary-camera-val">0.0 kg</span>
+                                        </summary>
+                                        <div class="acc-body" id="summary-camera-details">
+                                            <div class="detail-row"><span>尚無紀錄</span><span>0.0 kg</span></div>
+                                        </div>
+                                    </details>
+                                    <details open>
+                                        <summary>
+                                            <span class="acc-title"><i class="fa-solid fa-leaf"></i> 習慣養成</span>
+                                            <span class="acc-val" id="summary-habits-val">0.0 kg</span>
+                                        </summary>
+                                        <div class="acc-body" id="summary-habits-details">
+                                            <div class="detail-row"><span>尚無紀錄</span><span>0.0 kg</span></div>
+                                        </div>
+                                    </details>
+                                </div>
+
+                                <button class="btn-pill primary full-width checkout-btn" id="btn-checkout">
+                                    確認結算，注入星球能量
+                                </button>
+
+                                <div class="share-section" id="share-menu">
+                                    <p class="share-label">分享你的環保成就！</p>
+                                    <div class="share-row">
+                                        <button class="share-circle ig" aria-label="Share to Instagram"><i class="fa-brands fa-instagram"></i></button>
+                                        <button class="share-circle line" aria-label="Share to LINE"><i class="fa-brands fa-line"></i></button>
+                                        <button class="share-circle native" id="btn-share-native" aria-label="Share"><i class="fa-solid fa-share-nodes"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========== Mobile Bottom Nav ========== -->
+        <nav class="bottom-nav" id="bottom-nav">
+            <button class="bnav-item" data-target="view-camera" id="bnav-camera">
+                <i class="fa-solid fa-camera"></i>
+                <span>光盤打卡</span>
+            </button>
+            <button class="bnav-item fab active" data-target="view-home" id="bnav-home">
+                <i class="fa-solid fa-globe"></i>
+            </button>
+            <button class="bnav-item" data-target="view-summary" id="bnav-summary">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>零碳結算</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ========== Planet Gallery Modal ========== -->
+    <div class="modal-overlay" id="modal-planet-gallery">
+        <div class="modal-sheet" role="dialog" aria-label="Planet gallery">
+            <div class="modal-handle"></div>
+            <div class="modal-head">
+                <h3>🪐 星球圖鑑</h3>
+                <button class="btn-icon-close" id="btn-close-gallery" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="planet-grid">
+                <div class="planet-grid-item active" data-bg="assets/planet_earth.png" data-name="蔚藍地球">
+                    <img src="assets/planet_earth.png" alt="Earth Planet">
+                    <p>蔚藍地球</p>
+                </div>
+                <div class="planet-grid-item" data-bg="assets/planet_fire.png" data-name="熔岩煉獄">
+                    <img src="assets/planet_fire.png" alt="Fire Planet">
+                    <p>熔岩煉獄</p>
+                </div>
+                <div class="planet-grid-item" data-bg="assets/planet_neon.png" data-name="賽博霓虹">
+                    <img src="assets/planet_neon.png" alt="Neon Planet">
+                    <p>賽博霓虹</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== Success Feedback Modal ========== -->
+    <div class="modal-overlay" id="modal-success-feedback">
+        <div class="modal-sheet success-sheet" role="dialog" aria-label="Upload success">
+            <div class="modal-handle"></div>
+            <div class="success-body">
+                <div class="success-ring"><i class="fa-solid fa-check"></i></div>
+                <h3>審核成功！</h3>
+                <div class="fb-grid">
+                    <div class="fb-box">
+                        <span class="fb-label">減碳量</span>
+                        <span class="fb-val green">-0.5 kg</span>
+                    </div>
+                    <div class="fb-box">
+                        <span class="fb-label">獲得點數</span>
+                        <span class="fb-val amber">+20 Pts</span>
+                    </div>
+                </div>
+                <button class="btn-pill primary full-width btn-close-success">繼續探索</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
