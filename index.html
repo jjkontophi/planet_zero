@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Antigravity 減碳 App — 每日環保行動追蹤</title>
-    <meta name="description" content="透過 Antigravity 追蹤每日減碳行動，培育你的專屬星球，讓環保成為一種習慣。">
+    <title>Planet Zero — 每日減碳行動追蹤</title>
+    <meta name="description" content="透過 Planet Zero 追蹤每日減碳行動，培育你的專屬星球，讓環保成為一種習慣。">
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,8 +16,8 @@
         <!-- ========== Desktop Sidebar ========== -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <span class="brand-icon">🌍</span>
-                <span class="brand-text">Antigravity</span>
+                <img src="logo.jpg" alt="Planet Zero Logo" class="brand-logo">
+                <span class="brand-text">Planet Zero</span>
             </div>
             <nav class="sidebar-nav">
                 <button class="sidebar-item active" data-target="view-home" id="sidebar-home">
@@ -46,8 +47,8 @@
             <!-- Mobile Top Bar -->
             <header class="mobile-header" id="mobile-header">
                 <div class="mobile-brand">
-                    <span class="brand-icon-m">🌍</span>
-                    <h1 class="mobile-title">Antigravity</h1>
+                    <img src="logo.jpg" alt="Planet Zero Logo" class="brand-logo-m">
+                    <h1 class="mobile-title">Planet Zero</h1>
                 </div>
                 <button class="theme-toggle-btn-mobile" id="theme-toggle-mobile" aria-label="Toggle theme">
                     <i class="fa-solid fa-sun theme-icon-light"></i>
@@ -155,14 +156,31 @@
                                     <p>拍攝空盤以獲取能量</p>
                                 </div>
                                 <img id="preview-img" src="" alt="Photo Preview">
+                                <!-- AI Analyzing Overlay -->
+                                <div class="ai-analyzing-overlay" id="ai-analyzing-overlay">
+                                    <div class="ai-scan-line"></div>
+                                    <div class="ai-label"><i class="fa-solid fa-robot"></i> AI 辨識分析中…</div>
+                                </div>
                             </div>
                             <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+
+                            <!-- AI Result Panel (hidden by default) -->
+                            <div class="ai-result-panel" id="ai-result-panel" style="display:none;">
+                                <div class="ai-result-icon" id="ai-result-icon">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <div class="ai-result-content">
+                                    <p class="ai-result-verdict" id="ai-result-verdict">分析中…</p>
+                                    <p class="ai-result-detail" id="ai-result-detail"></p>
+                                </div>
+                            </div>
+
                             <div class="camera-btns">
                                 <button class="btn-pill primary large" id="btn-open-camera">
                                     <i class="fa-solid fa-camera"></i> 開啟相機
                                 </button>
                                 <button class="btn-pill secondary" id="btn-submit-photo" disabled>
-                                    <span class="btn-label">上傳審核</span>
+                                    <span class="btn-label"><i class="fa-solid fa-robot" style="margin-right:6px"></i>AI 審核上傳</span>
                                     <i class="fa-solid fa-spinner fa-spin spin-icon"></i>
                                 </button>
                             </div>
@@ -188,6 +206,25 @@
                                 </div>
                             </div>
 
+                            <!-- Lifetime Past Progress & Cookie Sync Card -->
+                            <div class="card lifetime-card">
+                                <div class="lifetime-grid">
+                                    <div class="lifetime-item">
+                                        <span class="lifetime-label"><i class="fa-solid fa-seedling"></i> 歷程累計減碳</span>
+                                        <div class="lifetime-value"><span id="lifetime-carbon-val">0.0</span> <small>kg</small></div>
+                                    </div>
+                                    <div class="lifetime-divider"></div>
+                                    <div class="lifetime-item">
+                                        <span class="lifetime-label"><i class="fa-solid fa-trophy"></i> 歷程累計點數</span>
+                                        <div class="lifetime-value"><span id="lifetime-pts-val">0</span> <small>Pts</small></div>
+                                    </div>
+                                </div>
+                                <div class="cookie-status-strip">
+                                    <span class="cookie-indicator"><i class="fa-solid fa-cookie-bite"></i> Cookie 已儲存歷史進度</span>
+                                    <span class="cookie-time" id="cookie-last-saved">進度已自動同步</span>
+                                </div>
+                            </div>
+
                             <div class="card details-card">
                                 <div class="accordion" id="accordion">
                                     <details open>
@@ -206,6 +243,15 @@
                                         </summary>
                                         <div class="acc-body" id="summary-habits-details">
                                             <div class="detail-row"><span>尚無紀錄</span><span>0.0 kg</span></div>
+                                        </div>
+                                    </details>
+                                    <details open>
+                                        <summary>
+                                            <span class="acc-title"><i class="fa-solid fa-clock-rotate-left"></i> 過去紀錄 (Cookie 儲存)</span>
+                                            <span class="acc-val" id="summary-history-count">0 天</span>
+                                        </summary>
+                                        <div class="acc-body" id="summary-history-details">
+                                            <div class="detail-row"><span>尚無歷史紀錄</span><span>結算後存入</span></div>
                                         </div>
                                     </details>
                                 </div>
@@ -276,7 +322,8 @@
             <div class="modal-handle"></div>
             <div class="success-body">
                 <div class="success-ring"><i class="fa-solid fa-check"></i></div>
-                <h3>審核成功！</h3>
+                <h3>🤖 AI 審核通過！</h3>
+                <p class="ai-modal-reason" id="success-ai-reason">AI 確認您的餐盤已清空</p>
                 <div class="fb-grid">
                     <div class="fb-box">
                         <span class="fb-label">減碳量</span>
@@ -288,6 +335,27 @@
                     </div>
                 </div>
                 <button class="btn-pill primary full-width btn-close-success">繼續探索</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== AI Rejection Modal ========== -->
+    <div class="modal-overlay" id="modal-ai-reject">
+        <div class="modal-sheet reject-sheet" role="dialog" aria-label="AI rejection">
+            <div class="modal-handle"></div>
+            <div class="reject-body">
+                <div class="reject-ring"><i class="fa-solid fa-xmark"></i></div>
+                <h3>❌ AI 審核未通過</h3>
+                <p class="ai-modal-reason" id="reject-ai-reason">AI 判定餐盤中仍有剩餘食物</p>
+                <div class="reject-tips">
+                    <p><i class="fa-solid fa-lightbulb"></i> 小提示</p>
+                    <ul>
+                        <li>請確保食物已完全吃完</li>
+                        <li>拍攝時請將餐盤置中</li>
+                        <li>確保光線充足、畫面清晰</li>
+                    </ul>
+                </div>
+                <button class="btn-pill secondary full-width btn-close-reject" id="btn-close-reject">重新拍照</button>
             </div>
         </div>
     </div>
