@@ -69,13 +69,6 @@
                             </div>
 
                             <div class="planet-ring-wrapper">
-                                <!-- Atmospheric Ambient Halo & Orbiting Bio-particles -->
-                                <div class="planet-atmosphere-halo" id="planet-atmosphere-halo"></div>
-                                <div class="planet-orbit-spores">
-                                    <span class="orbit-spore s1"></span>
-                                    <span class="orbit-spore s2"></span>
-                                    <span class="orbit-spore s3"></span>
-                                </div>
                                 <svg class="progress-ring" viewBox="0 0 220 220" aria-label="Planet energy progress">
                                     <circle cx="110" cy="110" r="96" class="ring-track"/>
                                     <circle cx="110" cy="110" r="96" class="ring-fill" id="progress-ring-fill"/>
@@ -126,64 +119,6 @@
                             <button class="btn-pill ghost btn-explore" id="btn-change-bg">
                                 <i class="fa-solid fa-book-atlas"></i> 淨化階段圖鑑
                             </button>
-                        </div>
-
-                        <!-- Planetary Ecosystem Monitor Card (動態連動當前星球生態) -->
-                        <div class="card planet-ecosystem-card" id="planet-ecosystem-card">
-                            <div class="eco-card-header">
-                                <div class="eco-title-group">
-                                    <i class="fa-solid fa-satellite-dish eco-icon"></i>
-                                    <div>
-                                        <h4>星球生態觀測儀</h4>
-                                        <p class="eco-sub" id="eco-sub-status">實時觀測中：隨減碳進度動態演化</p>
-                                    </div>
-                                </div>
-                                <span class="eco-live-badge" id="eco-status-pill">
-                                    <span class="eco-dot"></span>
-                                    <span id="eco-status-text">🚨 荒蕪受損</span>
-                                </span>
-                            </div>
-
-                            <div class="eco-metrics-grid">
-                                <div class="eco-metric-box">
-                                    <div class="eco-metric-top">
-                                        <span class="em-name"><i class="fa-solid fa-wind"></i> 大氣清潔度</span>
-                                        <span class="em-val" id="em-air-val">0%</span>
-                                    </div>
-                                    <div class="em-bar-track">
-                                        <div class="em-bar-fill" id="em-air-bar" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-
-                                <div class="eco-metric-box">
-                                    <div class="eco-metric-top">
-                                        <span class="em-name"><i class="fa-solid fa-seedling"></i> 地表綠化率</span>
-                                        <span class="em-val" id="em-green-val">0%</span>
-                                    </div>
-                                    <div class="em-bar-track">
-                                        <div class="em-bar-fill" id="em-green-bar" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-
-                                <div class="eco-metric-box">
-                                    <div class="eco-metric-top">
-                                        <span class="em-name"><i class="fa-solid fa-shield-heart"></i> 生態多樣性</span>
-                                        <span class="em-val" id="em-bio-val">瀕危停滯</span>
-                                    </div>
-                                    <div class="em-bar-track">
-                                        <div class="em-bar-fill" id="em-bio-bar" style="width: 5%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="eco-footer-row">
-                                <div class="guardian-rank">
-                                    <i class="fa-solid fa-medal rank-icon"></i>
-                                    <span>守護者稱號：</span>
-                                    <strong id="guardian-title">荒蕪清理先鋒</strong>
-                                </div>
-                                <span class="eco-stage-hint" id="eco-stage-hint">完成今日減碳，加速生態復甦！</span>
-                            </div>
                         </div>
 
                         <!-- Daily Green Habits -->

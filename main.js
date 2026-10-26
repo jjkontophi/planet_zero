@@ -82,18 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskCheckboxes = document.querySelectorAll('.task-checkbox');
     const btnChangeBg = document.getElementById('btn-change-bg');
 
-    // Ecosystem Monitor Elements
-    const ecoStatusText = document.getElementById('eco-status-text');
-    const ecoSubStatus = document.getElementById('eco-sub-status');
-    const emAirVal = document.getElementById('em-air-val');
-    const emAirBar = document.getElementById('em-air-bar');
-    const emGreenVal = document.getElementById('em-green-val');
-    const emGreenBar = document.getElementById('em-green-bar');
-    const emBioVal = document.getElementById('em-bio-val');
-    const emBioBar = document.getElementById('em-bio-bar');
-    const guardianTitle = document.getElementById('guardian-title');
-    const ecoStageHint = document.getElementById('eco-stage-hint');
-
     // Camera view
     const btnOpenCamera = document.getElementById('btn-open-camera');
     const cameraInput = document.getElementById('camera-input');
@@ -419,77 +407,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Gallery Modal states
         updateGalleryUI(totalPts);
 
-        // Update Planetary Ecosystem Dashboard & Ambient Theme
-        updateEcosystemUI(stage, totalPts);
-
         // Check for Level-Up Celebration!
         checkLevelUp(stage);
-    }
-
-    function updateEcosystemUI(stage, totalPts) {
-        // Set dynamic data-planet-stage attribute on HTML element to drive CSS themes!
-        document.documentElement.setAttribute('data-planet-stage', String(stage.percent));
-
-        const ecoData = {
-            0: {
-                air: '0%', airPct: 4,
-                green: '0%', greenPct: 3,
-                bio: '瀕危停滯', bioPct: 6,
-                status: '🚨 荒蕪受損',
-                sub: '觀測站警報：大氣覆蓋重度污染塵埃，急需減碳淨化！',
-                title: '荒蕪清理先鋒',
-                hint: '完成今日減碳任務，為星球注入第一道新生力量！'
-            },
-            25: {
-                air: '25%', airPct: 25,
-                green: '18%', greenPct: 18,
-                bio: '微光萌動', bioPct: 25,
-                status: '🌤 微光復甦',
-                sub: '大氣微塵沉降中，第一道陽光穿透雲層照射地表！',
-                title: '微光探索者',
-                hint: '地表污染消退中，繼續保持讓綠芽萌發！'
-            },
-            50: {
-                air: '50%', airPct: 50,
-                green: '48%', greenPct: 48,
-                bio: '生機初醒', bioPct: 50,
-                status: '🌱 綠芽破土',
-                sub: '水土淨化過半，綠色苔蘚與初生草木於陸地繁衍！',
-                title: '綠茵播種使者',
-                hint: '距離繁盛綠洲僅剩一步，堅持零碳生活！'
-            },
-            75: {
-                air: '75%', airPct: 75,
-                green: '76%', greenPct: 76,
-                bio: '萬物繁衍', bioPct: 75,
-                status: '🌿 繁茂綠洲',
-                sub: '大氣純淨度七成五，森林覆蓋擴大，海洋清澈見底！',
-                title: '綠洲守護尊者',
-                hint: '即將達成完全淨化！向 100% 璀璨零碳星衝刺！'
-            },
-            100: {
-                air: '100%', airPct: 100,
-                green: '100%', greenPct: 100,
-                bio: '和諧共生', bioPct: 100,
-                status: '✨ 璀璨永續',
-                sub: '全球達成零碳平衡！萬物生生不息，星球煥發永恆光彩！',
-                title: '傳奇零碳星神',
-                hint: '🎉 恭喜！您已培育出宇宙中最璀璨的美麗零碳家園！'
-            }
-        };
-
-        const d = ecoData[stage.percent] || ecoData[0];
-
-        if (emAirVal) emAirVal.textContent = d.air;
-        if (emAirBar) emAirBar.style.width = d.airPct + '%';
-        if (emGreenVal) emGreenVal.textContent = d.green;
-        if (emGreenBar) emGreenBar.style.width = d.greenPct + '%';
-        if (emBioVal) emBioVal.textContent = d.bio;
-        if (emBioBar) emBioBar.style.width = d.bioPct + '%';
-        if (guardianTitle) guardianTitle.textContent = d.title;
-        if (ecoStatusText) ecoStatusText.textContent = d.status;
-        if (ecoSubStatus) ecoSubStatus.textContent = d.sub;
-        if (ecoStageHint) ecoStageHint.textContent = d.hint;
     }
 
     function updateMilestones(totalPts, currentPct) {
