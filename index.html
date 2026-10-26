@@ -60,23 +60,64 @@
             <section id="view-home" class="view active">
                 <div class="view-scroll">
                     <div class="view-inner home-grid">
-                        <!-- Planet Hero with Progress Ring -->
+                        <!-- Planet Hero with Progress Ring & 5-Stage Purification Milestones -->
                         <div class="planet-hero">
+                            <!-- Planet Stage Badge -->
+                            <div class="planet-stage-badge" id="planet-stage-badge">
+                                <span class="stage-dot"></span>
+                                <span id="planet-stage-text">清理程度 0% · 初始荒蕪</span>
+                            </div>
+
                             <div class="planet-ring-wrapper">
                                 <svg class="progress-ring" viewBox="0 0 220 220" aria-label="Planet energy progress">
                                     <circle cx="110" cy="110" r="96" class="ring-track"/>
                                     <circle cx="110" cy="110" r="96" class="ring-fill" id="progress-ring-fill"/>
                                 </svg>
-                                <div class="planet-img-frame">
-                                    <img id="planet-img" src="assets/planet_earth.png" alt="Current Planet">
+                                <div class="planet-img-frame" id="planet-img-frame">
+                                    <img id="planet-img" src="images/0.jpg" alt="Planet Cleaning Progress">
                                 </div>
                             </div>
                             <div class="planet-meta">
-                                <h2 id="planet-name">蔚藍地球</h2>
-                                <p class="progress-text" id="progress-label">0 / 100 Pts</p>
+                                <h2 id="planet-name">荒蕪星球 (0%)</h2>
+                                <p class="progress-text" id="progress-label">0 / 50 Pts</p>
+                                <p class="progress-next-tip" id="progress-next-tip">🌱 距離 25% 升級還需 50 Pts</p>
                             </div>
+
+                            <!-- 5-Stage Milestone Progress Track -->
+                            <div class="planet-milestones" id="planet-milestones" aria-label="星球淨化里程碑">
+                                <div class="milestone-step unlocked active" id="mstep-0" data-pct="0">
+                                    <div class="milestone-dot"><i class="fa-solid fa-check"></i></div>
+                                    <span class="milestone-pct">0%</span>
+                                    <span class="milestone-pts">0 pt</span>
+                                </div>
+                                <div class="milestone-line" id="mline-1"></div>
+                                <div class="milestone-step" id="mstep-25" data-pct="25">
+                                    <div class="milestone-dot">25%</div>
+                                    <span class="milestone-pct">25%</span>
+                                    <span class="milestone-pts">50 pt</span>
+                                </div>
+                                <div class="milestone-line" id="mline-2"></div>
+                                <div class="milestone-step" id="mstep-50" data-pct="50">
+                                    <div class="milestone-dot">50%</div>
+                                    <span class="milestone-pct">50%</span>
+                                    <span class="milestone-pts">200 pt</span>
+                                </div>
+                                <div class="milestone-line" id="mline-3"></div>
+                                <div class="milestone-step" id="mstep-75" data-pct="75">
+                                    <div class="milestone-dot">75%</div>
+                                    <span class="milestone-pct">75%</span>
+                                    <span class="milestone-pts">500 pt</span>
+                                </div>
+                                <div class="milestone-line" id="mline-4"></div>
+                                <div class="milestone-step" id="mstep-100" data-pct="100">
+                                    <div class="milestone-dot"><i class="fa-solid fa-crown"></i></div>
+                                    <span class="milestone-pct">100%</span>
+                                    <span class="milestone-pts">1000 pt</span>
+                                </div>
+                            </div>
+
                             <button class="btn-pill ghost btn-explore" id="btn-change-bg">
-                                <i class="fa-solid fa-rocket"></i> 探索圖鑑
+                                <i class="fa-solid fa-book-atlas"></i> 淨化階段圖鑑
                             </button>
                         </div>
 
@@ -291,27 +332,91 @@
         </div>
     </div>
 
-    <!-- ========== Planet Gallery Modal ========== -->
+    <!-- ========== Planet Gallery Modal (5-Stage Purification) ========== -->
     <div class="modal-overlay" id="modal-planet-gallery">
-        <div class="modal-sheet" role="dialog" aria-label="Planet gallery">
+        <div class="modal-sheet gallery-sheet" role="dialog" aria-label="Planet purification gallery">
             <div class="modal-handle"></div>
             <div class="modal-head">
-                <h3>🪐 星球圖鑑</h3>
+                <div>
+                    <h3>🪐 星球淨化階段圖鑑</h3>
+                    <p class="modal-sub">累積減碳點數以淨化星球，共 5 個進化階段</p>
+                </div>
                 <button class="btn-icon-close" id="btn-close-gallery" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="planet-grid">
-                <div class="planet-grid-item active" data-bg="assets/planet_earth.png" data-name="蔚藍地球">
-                    <img src="assets/planet_earth.png" alt="Earth Planet">
-                    <p>蔚藍地球</p>
+            <div class="planet-grid" id="planet-gallery-grid">
+                <!-- 0% -->
+                <div class="planet-grid-item" data-pct="0" data-bg="images/0.jpg" data-name="荒蕪星球 (0%)" data-req="0">
+                    <div class="planet-thumb-wrap">
+                        <img src="images/0.jpg" alt="0% Clean">
+                        <span class="gallery-tag unlocked"><i class="fa-solid fa-circle-check"></i> 初始</span>
+                    </div>
+                    <p class="stage-title">0% 荒蕪污染</p>
+                    <span class="stage-pts-label">0 Pts 解鎖</span>
                 </div>
-                <div class="planet-grid-item" data-bg="assets/planet_fire.png" data-name="熔岩煉獄">
-                    <img src="assets/planet_fire.png" alt="Fire Planet">
-                    <p>熔岩煉獄</p>
+                <!-- 25% -->
+                <div class="planet-grid-item" data-pct="25" data-bg="images/25.jpg" data-name="微光星球 (25%)" data-req="50">
+                    <div class="planet-thumb-wrap">
+                        <img src="images/25.jpg" alt="25% Clean">
+                        <span class="gallery-tag" id="gtag-25"><i class="fa-solid fa-lock"></i> 需 50 pt</span>
+                    </div>
+                    <p class="stage-title">25% 微光復甦</p>
+                    <span class="stage-pts-label">50 Pts 解鎖</span>
                 </div>
-                <div class="planet-grid-item" data-bg="assets/planet_neon.png" data-name="賽博霓虹">
-                    <img src="assets/planet_neon.png" alt="Neon Planet">
-                    <p>賽博霓虹</p>
+                <!-- 50% -->
+                <div class="planet-grid-item" data-pct="50" data-bg="images/50.png" data-name="萌發星球 (50%)" data-req="200">
+                    <div class="planet-thumb-wrap">
+                        <img src="images/50.png" alt="50% Clean">
+                        <span class="gallery-tag" id="gtag-50"><i class="fa-solid fa-lock"></i> 需 200 pt</span>
+                    </div>
+                    <p class="stage-title">50% 生機萌發</p>
+                    <span class="stage-pts-label">200 Pts 解鎖</span>
                 </div>
+                <!-- 75% -->
+                <div class="planet-grid-item" data-pct="75" data-bg="images/75.png" data-name="繁盛綠洲 (75%)" data-req="500">
+                    <div class="planet-thumb-wrap">
+                        <img src="images/75.png" alt="75% Clean">
+                        <span class="gallery-tag" id="gtag-75"><i class="fa-solid fa-lock"></i> 需 500 pt</span>
+                    </div>
+                    <p class="stage-title">75% 綠意盎然</p>
+                    <span class="stage-pts-label">500 Pts 解鎖</span>
+                </div>
+                <!-- 100% -->
+                <div class="planet-grid-item" data-pct="100" data-bg="images/100.jpg" data-name="璀璨零碳星 (100%)" data-req="1000">
+                    <div class="planet-thumb-wrap">
+                        <img src="images/100.jpg" alt="100% Clean">
+                        <span class="gallery-tag" id="gtag-100"><i class="fa-solid fa-crown"></i> 需 1000 pt</span>
+                    </div>
+                    <p class="stage-title">100% 璀璨零碳星</p>
+                    <span class="stage-pts-label">1000 Pts 解鎖</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== Planet Level-Up Celebration Modal ========== -->
+    <div class="modal-overlay" id="modal-planet-levelup">
+        <div class="modal-sheet levelup-sheet" role="dialog" aria-label="Planet level up">
+            <div class="modal-handle"></div>
+            <div class="levelup-body">
+                <div class="levelup-badge"><i class="fa-solid fa-sparkles"></i> PURIFICATION UPGRADED</div>
+                <div class="levelup-img-wrap">
+                    <img id="levelup-img" src="images/25.jpg" alt="Purified Planet">
+                    <div class="levelup-glow"></div>
+                </div>
+                <h3 id="levelup-title">🎉 星球淨化升級！</h3>
+                <p class="levelup-stage" id="levelup-stage">清理程度已提升至 25%</p>
+                <p class="levelup-desc" id="levelup-desc">大氣層透出第一線微光，地表污染正在消退！感謝您的減碳行動！</p>
+                <div class="levelup-metrics">
+                    <div class="lm-box">
+                        <span class="lm-label">當前清理程度</span>
+                        <span class="lm-val" id="levelup-val-pct">25%</span>
+                    </div>
+                    <div class="lm-box">
+                        <span class="lm-label">下一階段目標</span>
+                        <span class="lm-val" id="levelup-val-next">200 pt (50%)</span>
+                    </div>
+                </div>
+                <button class="btn-pill primary full-width" id="btn-close-levelup">太棒了，繼續守護星球！</button>
             </div>
         </div>
     </div>

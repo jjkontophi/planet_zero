@@ -75,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Home view
     const ringFill = document.getElementById('progress-ring-fill');
     const progressLabel = document.getElementById('progress-label');
+    const progressNextTip = document.getElementById('progress-next-tip');
+    const planetStageText = document.getElementById('planet-stage-text');
     const planetImg = document.getElementById('planet-img');
     const planetName = document.getElementById('planet-name');
     const taskCheckboxes = document.querySelectorAll('.task-checkbox');
@@ -105,9 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modals
     const modalGallery = document.getElementById('modal-planet-gallery');
     const btnCloseGallery = document.getElementById('btn-close-gallery');
-    const planetGridItems = document.querySelectorAll('.planet-grid-item');
     const modalSuccess = document.getElementById('modal-success-feedback');
     const btnCloseSuccess = document.querySelector('.btn-close-success');
+    const modalLevelup = document.getElementById('modal-planet-levelup');
+    const btnCloseLevelup = document.getElementById('btn-close-levelup');
+    const levelupImg = document.getElementById('levelup-img');
+    const levelupTitle = document.getElementById('levelup-title');
+    const levelupStage = document.getElementById('levelup-stage');
+    const levelupDesc = document.getElementById('levelup-desc');
+    const levelupValPct = document.getElementById('levelup-val-pct');
+    const levelupValNext = document.getElementById('levelup-val-next');
 
     // Toast
     const toastContainer = document.getElementById('toast-container');
@@ -127,8 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
             habitsCarbon: 0,
             cameraTasks: [],
             dailyTasks: {},
-            selectedPlanet: 'assets/planet_earth.png',
-            selectedPlanetName: '蔚藍地球',
+            selectedPlanet: 'images/0.jpg',
+            selectedPlanetName: '荒蕪星球 (0%)',
+            highestPlanetLevel: 0,
             settled: false,
             lifetimePoints: 0,
             lifetimeCarbon: 0,
@@ -193,6 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 merged.cameraTasks = [];
                 merged.dailyTasks = {};
                 merged.settled = false;
+            }
+
+            if (!merged.selectedPlanet || merged.selectedPlanet.startsWith('assets/')) {
+                merged.selectedPlanet = 'images/0.jpg';
+                merged.selectedPlanetName = '荒蕪星球 (0%)';
             }
 
             return merged;
@@ -270,19 +285,233 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.mobile-brand')?.addEventListener('click', () => switchView('view-home'));
 
     // =======================================================
-    // PROGRESS RING
+    // PLANET PURIFICATION STAGES (5-STAGE PROGRESSION SYSTEM)
+    // 0% (0 pt) -> 25% (50 pt) -> 50% (200 pt) -> 75% (500 pt) -> 100% (1000 pt)
+    // =======================================================
+    const PLANET_STAGES = [
+        {
+            percent: 0,
+            threshold: 0,
+            nextThreshold: 50,
+            image: 'images/0.jpg',
+            name: '荒蕪星球 (0%)',
+            badgeText: '清理程度 0% · 初始荒蕪',
+            desc: '星球滿目瘡痍，急需您的每日綠色減碳行動來淨化拯救！'
+        },
+        {
+            percent: 25,
+            threshold: 50,
+            nextThreshold: 200,
+            image: 'images/25.jpg',
+            name: '微光星球 (25%)',
+            badgeText: '清理程度 25% · 微光復甦',
+            desc: '地表廢棄物開始減少，大氣層透出第一線微光！感謝您的減碳付出！'
+        },
+        {
+            percent: 50,
+            threshold: 200,
+            nextThreshold: 500,
+            image: 'images/50.png',
+            name: '萌發星球 (50%)',
+            badgeText: '清理程度 50% · 生機萌發',
+            desc: '半數海洋與陸地已獲得淨化，綠色植被破土萌發，星球展現生機！'
+        },
+        {
+            percent: 75,
+            threshold: 500,
+            nextThreshold: 1000,
+            image: 'images/75.png',
+            name: '繁盛綠洲 (75%)',
+            badgeText: '清理程度 75% · 綠意盎然',
+            desc: '七成五地表重現綠意，水質清澈澄淨，氣候逐漸恢復平衡！'
+        },
+        {
+            percent: 100,
+            threshold: 1000,
+            nextThreshold: null,
+            image: 'images/100.jpg',
+            name: '璀璨零碳星 (100%)',
+            badgeText: '清理程度 100% · 完全淨化',
+            desc: '恭喜！星球已達成 100% 潔淨零碳，成為宇宙中最美麗的永續家園！'
+        }
+    ];
+
+    function getPlanetStageByPoints(pts) {
+        if (pts >= 1000) return PLANET_STAGES[4];
+        if (pts >= 500) return PLANET_STAGES[3];
+        if (pts >= 200) return PLANET_STAGES[2];
+        if (pts >= 50) return PLANET_STAGES[1];
+        return PLANET_STAGES[0];
+    }
+
+    function getTotalAccumulatedPoints() {
+        return (state.lifetimePoints || 0) + (state.totalPoints || 0);
+    }
+
+    // =======================================================
+    // PROGRESS RING & PURIFICATION PROGRESS
     // =======================================================
     function updateRing() {
-        const pct = Math.min(state.totalPoints / POINTS_TO_UNLOCK, 1);
-        const offset = RING_CIRCUMFERENCE * (1 - pct);
-        ringFill.style.strokeDashoffset = offset;
-        progressLabel.textContent = `${state.totalPoints} / ${POINTS_TO_UNLOCK} Pts`;
-        cameraPointsSpan.textContent = state.totalPoints;
+        const totalPts = getTotalAccumulatedPoints();
+        const stage = getPlanetStageByPoints(totalPts);
+        cameraPointsSpan.textContent = totalPts;
 
-        if (pct >= 1 && html.getAttribute('data-theme') === 'dark') {
+        // Calculate progress percentage for current stage
+        let pct = 0;
+        if (stage.percent === 0) {
+            pct = totalPts / 50;
+            progressLabel.textContent = `${totalPts} / 50 Pts`;
+            if (progressNextTip) progressNextTip.textContent = `🌱 距離 25% 升級還需 ${Math.max(50 - totalPts, 0)} Pts`;
+        } else if (stage.percent === 25) {
+            pct = (totalPts - 50) / (200 - 50);
+            progressLabel.textContent = `${totalPts} / 200 Pts`;
+            if (progressNextTip) progressNextTip.textContent = `🌱 距離 50% 升級還需 ${Math.max(200 - totalPts, 0)} Pts`;
+        } else if (stage.percent === 50) {
+            pct = (totalPts - 200) / (500 - 200);
+            progressLabel.textContent = `${totalPts} / 500 Pts`;
+            if (progressNextTip) progressNextTip.textContent = `🌱 距離 75% 升級還需 ${Math.max(500 - totalPts, 0)} Pts`;
+        } else if (stage.percent === 75) {
+            pct = (totalPts - 500) / (1000 - 500);
+            progressLabel.textContent = `${totalPts} / 1000 Pts`;
+            if (progressNextTip) progressNextTip.textContent = `🌱 距離 100% 升級還需 ${Math.max(1000 - totalPts, 0)} Pts`;
+        } else {
+            pct = 1;
+            progressLabel.textContent = `${totalPts} Pts (100% 滿級)`;
+            if (progressNextTip) progressNextTip.textContent = `🎉 星球已達成 100% 璀璨零碳完全淨化！`;
+        }
+
+        const clampedPct = Math.min(Math.max(pct, 0), 1);
+        const offset = RING_CIRCUMFERENCE * (1 - clampedPct);
+        ringFill.style.strokeDashoffset = offset;
+
+        // Sync planet image & badge with current stage (unless custom previewed)
+        if (!state.selectedPlanet || state.selectedPlanet.startsWith('assets/')) {
+            state.selectedPlanet = stage.image;
+            state.selectedPlanetName = stage.name;
+        }
+
+        planetImg.src = state.selectedPlanet;
+        planetName.textContent = state.selectedPlanetName;
+        if (planetStageText) planetStageText.textContent = stage.badgeText;
+
+        // Pulse ring animation when 100% complete
+        if (totalPts >= 1000) {
             ringFill.parentElement.style.animation = 'pulseRing 2s infinite';
         } else {
             ringFill.parentElement.style.animation = '';
+        }
+
+        // Update Milestone track
+        updateMilestones(totalPts, stage.percent);
+
+        // Update Gallery Modal states
+        updateGalleryUI(totalPts);
+
+        // Check for Level-Up Celebration!
+        checkLevelUp(stage);
+    }
+
+    function updateMilestones(totalPts, currentPct) {
+        const steps = [
+            { id: 'mstep-0', pct: 0, req: 0 },
+            { id: 'mstep-25', pct: 25, req: 50 },
+            { id: 'mstep-50', pct: 50, req: 200 },
+            { id: 'mstep-75', pct: 75, req: 500 },
+            { id: 'mstep-100', pct: 100, req: 1000 }
+        ];
+
+        steps.forEach((s) => {
+            const el = document.getElementById(s.id);
+            if (!el) return;
+            const isUnlocked = totalPts >= s.req;
+            const isActive = currentPct === s.pct;
+
+            el.classList.toggle('unlocked', isUnlocked);
+            el.classList.toggle('active', isActive);
+
+            const dot = el.querySelector('.milestone-dot');
+            if (dot) {
+                if (s.pct === 0) {
+                    dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else if (s.pct === 100) {
+                    dot.innerHTML = isUnlocked ? '<i class="fa-solid fa-crown"></i>' : '100%';
+                } else {
+                    dot.innerHTML = isUnlocked ? '<i class="fa-solid fa-check"></i>' : `${s.pct}%`;
+                }
+            }
+        });
+
+        // Connecting lines
+        const l1 = document.getElementById('mline-1');
+        const l2 = document.getElementById('mline-2');
+        const l3 = document.getElementById('mline-3');
+        const l4 = document.getElementById('mline-4');
+
+        if (l1) l1.classList.toggle('filled', totalPts >= 50);
+        if (l2) l2.classList.toggle('filled', totalPts >= 200);
+        if (l3) l3.classList.toggle('filled', totalPts >= 500);
+        if (l4) l4.classList.toggle('filled', totalPts >= 1000);
+    }
+
+    function updateGalleryUI(totalPts) {
+        const gridItems = document.querySelectorAll('.planet-grid-item');
+        gridItems.forEach(item => {
+            const req = parseInt(item.dataset.req, 10) || 0;
+            const isUnlocked = totalPts >= req;
+            const isSelected = (state.selectedPlanet === item.dataset.bg);
+
+            item.classList.toggle('locked', !isUnlocked);
+            item.classList.toggle('active', isSelected);
+
+            const tag = item.querySelector('.gallery-tag');
+            if (tag) {
+                if (isUnlocked) {
+                    tag.className = 'gallery-tag unlocked';
+                    tag.innerHTML = '<i class="fa-solid fa-circle-check"></i> 已解鎖';
+                } else {
+                    tag.className = 'gallery-tag';
+                    const diff = req - totalPts;
+                    tag.innerHTML = `<i class="fa-solid fa-lock"></i> 還差 ${diff} pt`;
+                }
+            }
+        });
+    }
+
+    function checkLevelUp(stage) {
+        if (typeof state.highestPlanetLevel !== 'number') {
+            state.highestPlanetLevel = 0;
+        }
+
+        // Newly reached higher level
+        if (stage.percent > state.highestPlanetLevel) {
+            state.highestPlanetLevel = stage.percent;
+            state.selectedPlanet = stage.image;
+            state.selectedPlanetName = stage.name;
+            saveState();
+
+            // Fire confetti
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Show level-up celebration modal
+            if (modalLevelup) {
+                if (levelupImg) levelupImg.src = stage.image;
+                if (levelupTitle) levelupTitle.textContent = `🎉 星球淨化升級至 ${stage.percent}%！`;
+                if (levelupStage) levelupStage.textContent = `清理程度已提升至 ${stage.percent}% (${stage.name})`;
+                if (levelupDesc) levelupDesc.textContent = stage.desc;
+                if (levelupValPct) levelupValPct.textContent = `${stage.percent}%`;
+                if (levelupValNext) {
+                    levelupValNext.textContent = stage.nextThreshold ? `${stage.nextThreshold} pt (${stage.nextThreshold === 50 ? '25%' : stage.nextThreshold === 200 ? '50%' : stage.nextThreshold === 500 ? '75%' : '100%'})` : '已達完全淨化！';
+                }
+                modalLevelup.classList.add('active');
+            }
+
+            showToast(`🎉 恭喜！星球淨化提升至 ${stage.percent}%！`);
         }
     }
 
@@ -343,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =======================================================
-    // PLANET GALLERY
+    // PLANET GALLERY MODAL & LEVEL-UP MODAL LISTENERS
     // =======================================================
     btnChangeBg.addEventListener('click', () => {
         modalGallery.classList.add('active');
@@ -355,8 +584,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modalGallery) modalGallery.classList.remove('active');
     });
 
+    // Gallery item selection
+    const planetGridItems = document.querySelectorAll('.planet-grid-item');
     planetGridItems.forEach(item => {
         item.addEventListener('click', () => {
+            const req = parseInt(item.dataset.req, 10) || 0;
+            const totalPts = getTotalAccumulatedPoints();
+
+            if (totalPts < req) {
+                const diff = req - totalPts;
+                showToast(`🔒 還差 ${diff} Pts 才能解鎖此階段！請繼續加油！`);
+                return;
+            }
+
             planetGridItems.forEach(g => g.classList.remove('active'));
             item.classList.add('active');
 
@@ -369,17 +609,29 @@ document.addEventListener('DOMContentLoaded', () => {
             state.selectedPlanetName = name;
             saveState();
 
-            setTimeout(() => modalGallery.classList.remove('active'), 300);
+            showToast(`已切換星球外觀至：${name}`);
+            setTimeout(() => modalGallery.classList.remove('active'), 250);
         });
     });
 
-    // Apply saved planet
-    planetImg.src = state.selectedPlanet;
-    planetName.textContent = state.selectedPlanetName;
-    // Also sync gallery active state
-    planetGridItems.forEach(g => {
-        g.classList.toggle('active', g.dataset.bg === state.selectedPlanet);
+    // Milestone steps click to open gallery
+    document.querySelectorAll('.milestone-step').forEach(step => {
+        step.addEventListener('click', () => {
+            modalGallery.classList.add('active');
+        });
     });
+
+    // Close Level-Up modal
+    if (btnCloseLevelup) {
+        btnCloseLevelup.addEventListener('click', () => {
+            modalLevelup.classList.remove('active');
+        });
+    }
+    if (modalLevelup) {
+        modalLevelup.addEventListener('click', (e) => {
+            if (e.target === modalLevelup) modalLevelup.classList.remove('active');
+        });
+    }
 
     // =======================================================
     // TASK 1: CAMERA CHECK-IN (AI-Powered Plate Analysis)
@@ -932,7 +1184,8 @@ document.addEventListener('DOMContentLoaded', () => {
 1. 親切友善、鼓勵性強，適當使用 emoji（🌱、🥗、🌍、💡、✨）。
 2. 回答務求具體實用、數據精確（例如：吃一餐素約可減碳 1.5 公斤；生產 1 公斤牛肉約排放 27 公斤 CO2 等；剩食占全球溫室氣體 8-10%）。
 3. 條理分明，善用粗體關鍵字與列點排版，長度控制在 150~250 字內，讓手機與桌面端閱讀舒適。
-4. 結合 Planet Zero 理念，鼓勵用戶完成每日減碳打卡、拍照光盤來培育個人專屬星球！`;
+4. 結合 Planet Zero 理念，鼓勵用戶完成每日減碳打卡、拍照光盤來培育個人專屬星球！
+5. 熟知 Planet Zero 的星球淨化升級機制：初始為 0% 荒蕪狀態，累積達 50 pt 升級為 25% (微光復甦)、200 pt 升級為 50% (生機萌發)、500 pt 升級為 75% (繁盛綠洲)、1000 pt 升級為 100% (璀璨零碳星)。若用戶詢問升級方法，請熱情說明這些門檻與集點技巧！`;
 
             const recentMessages = chatHistory.slice(-6).map(m => ({
                 role: m.role,
