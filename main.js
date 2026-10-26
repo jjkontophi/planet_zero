@@ -770,11 +770,297 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =======================================================
+    // AI CARBON ASSISTANT (FLOATING BOT & PRESET QUESTIONS)
+    // =======================================================
+    function initAiAssistant() {
+        const fabBtn = document.getElementById('ai-fab-btn');
+        const fabTooltip = document.getElementById('ai-fab-tooltip');
+        const tooltipClose = document.getElementById('ai-tooltip-close');
+        const chatPanel = document.getElementById('ai-chat-panel');
+        const chatMessages = document.getElementById('ai-chat-messages');
+        const chatForm = document.getElementById('ai-chat-form');
+        const chatInput = document.getElementById('ai-chat-input');
+        const sendBtn = document.getElementById('ai-chat-send-btn');
+        const btnClose = document.getElementById('ai-chat-close');
+        const btnClear = document.getElementById('ai-chat-clear');
+        const presetChips = document.querySelectorAll('.ai-preset-chip');
+        const assistantWrapper = document.getElementById('ai-assistant-wrapper');
+
+        if (!fabBtn || !chatPanel) return;
+
+        const SESSION_CHAT_KEY = 'planet_zero_ai_chat_v1';
+        let chatHistory = [];
+        let isGenerating = false;
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function formatMarkdown(text) {
+            let escaped = escapeHtml(text);
+            escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            const lines = escaped.split('\n');
+            let result = '';
+            let inList = false;
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) {
+                    if (inList) {
+                        result += '</ul>';
+                        inList = false;
+                    }
+                    continue;
+                }
+
+                if (/^[-•*]\s+(.*)/.test(line)) {
+                    if (!inList) {
+                        result += '<ul>';
+                        inList = true;
+                    }
+                    result += `<li>${line.replace(/^[-•*]\s+/, '')}</li>`;
+                } else if (/^\d+\.\s+(.*)/.test(line)) {
+                    if (!inList) {
+                        result += '<ol>';
+                        inList = true;
+                    }
+                    result += `<li>${line.replace(/^\d+\.\s+/, '')}</li>`;
+                } else {
+                    if (inList) {
+                        result += '</ul>';
+                        inList = false;
+                    }
+                    result += `<p>${line}</p>`;
+                }
+            }
+
+            if (inList) result += '</ul>';
+            return result || `<p>${escaped}</p>`;
+        }
+
+        function appendMessage(role, content) {
+            const msgEl = document.createElement('div');
+            msgEl.className = `ai-msg ${role}`;
+
+            if (role === 'bot') {
+                msgEl.innerHTML = `
+                    <div class="ai-msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="ai-msg-bubble">${formatMarkdown(content)}</div>
+                `;
+            } else {
+                msgEl.innerHTML = `
+                    <div class="ai-msg-bubble">${escapeHtml(content)}</div>
+                `;
+            }
+
+            chatMessages.appendChild(msgEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingEl = document.createElement('div');
+            typingEl.className = 'ai-msg bot';
+            typingEl.id = 'ai-typing-indicator';
+            typingEl.innerHTML = `
+                <div class="ai-msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="ai-msg-bubble ai-typing-indicator">
+                    <div class="ai-typing-dot"></div>
+                    <div class="ai-typing-dot"></div>
+                    <div class="ai-typing-dot"></div>
+                </div>
+            `;
+            chatMessages.appendChild(typingEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingEl = document.getElementById('ai-typing-indicator');
+            if (typingEl) typingEl.remove();
+        }
+
+        function initHistory() {
+            chatMessages.innerHTML = '';
+            try {
+                const stored = sessionStorage.getItem(SESSION_CHAT_KEY);
+                if (stored) {
+                    chatHistory = JSON.parse(stored);
+                }
+            } catch (e) {
+                chatHistory = [];
+            }
+
+            if (!Array.isArray(chatHistory) || chatHistory.length === 0) {
+                const welcomeText = `👋 您好！我是 **Planet Zero 減碳小助手** 🌱\n\n有任何關於日常減碳、光盤行動或綠色生活的疑問，都可以隨時問我喔！\n\n您可以點擊下方的**推薦減碳提問**，或直接輸入任何問題向我提問 ✨`;
+                chatHistory = [{ role: 'assistant', content: welcomeText }];
+            }
+
+            chatHistory.forEach(msg => {
+                appendMessage(msg.role === 'assistant' ? 'bot' : 'user', msg.content);
+            });
+        }
+
+        function saveHistory() {
+            try {
+                const slice = chatHistory.slice(-15);
+                sessionStorage.setItem(SESSION_CHAT_KEY, JSON.stringify(slice));
+            } catch (e) {}
+        }
+
+        async function sendQuery(queryText) {
+            const q = (queryText || '').trim();
+            if (!q || isGenerating) return;
+
+            isGenerating = true;
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+            presetChips.forEach(chip => chip.style.pointerEvents = 'none');
+
+            appendMessage('user', q);
+            chatHistory.push({ role: 'user', content: q });
+            showTypingIndicator();
+
+            const systemPrompt = `你是一位熱情、專業且友善的「Planet Zero 減碳環保小助手」，專門為用戶解答與日常生活減碳、光盤行動（吃完不浪費）、碳足跡計算、蔬食環保、能源節約與綠色生活相關的問題。
+
+回覆風格與規則：
+1. 親切友善、鼓勵性強，適當使用 emoji（🌱、🥗、🌍、💡、✨）。
+2. 回答務求具體實用、數據精確（例如：吃一餐素約可減碳 1.5 公斤；生產 1 公斤牛肉約排放 27 公斤 CO2 等；剩食占全球溫室氣體 8-10%）。
+3. 條理分明，善用粗體關鍵字與列點排版，長度控制在 150~250 字內，讓手機與桌面端閱讀舒適。
+4. 結合 Planet Zero 理念，鼓勵用戶完成每日減碳打卡、拍照光盤來培育個人專屬星球！`;
+
+            const recentMessages = chatHistory.slice(-6).map(m => ({
+                role: m.role,
+                content: m.content
+            }));
+
+            try {
+                const response = await fetch(AI_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            ...recentMessages
+                        ],
+                        temperature: 0.6,
+                        max_tokens: 450
+                    })
+                });
+
+                removeTypingIndicator();
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiReply = data?.choices?.[0]?.message?.content?.trim() || '抱歉，小助手剛剛沒有理解，能換個方式再問一次嗎？';
+
+                appendMessage('bot', aiReply);
+                chatHistory.push({ role: 'assistant', content: aiReply });
+                saveHistory();
+
+            } catch (err) {
+                console.error('AI Chat Error:', err);
+                removeTypingIndicator();
+                const errorMsg = '抱歉，小助手剛剛網路連線有點波動 😅 請稍後再試一次，或檢查網路設定！';
+                appendMessage('bot', errorMsg);
+            } finally {
+                isGenerating = false;
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                presetChips.forEach(chip => chip.style.pointerEvents = 'auto');
+                chatInput.focus();
+            }
+        }
+
+        function toggleChat() {
+            const isOpen = chatPanel.classList.toggle('open');
+            if (isOpen) {
+                if (fabTooltip) fabTooltip.classList.add('hidden');
+                setTimeout(() => chatInput.focus(), 300);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        fabBtn.addEventListener('click', toggleChat);
+
+        if (tooltipClose) {
+            tooltipClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (fabTooltip) fabTooltip.classList.add('hidden');
+            });
+        }
+
+        if (fabTooltip) {
+            fabTooltip.addEventListener('click', () => {
+                toggleChat();
+            });
+        }
+
+        if (btnClose) {
+            btnClose.addEventListener('click', () => {
+                chatPanel.classList.remove('open');
+            });
+        }
+
+        if (btnClear) {
+            btnClear.addEventListener('click', () => {
+                chatHistory = [];
+                sessionStorage.removeItem(SESSION_CHAT_KEY);
+                initHistory();
+                showToast('已清空對話紀錄');
+            });
+        }
+
+        // Close when clicking outside on document
+        document.addEventListener('click', (e) => {
+            if (chatPanel.classList.contains('open') && assistantWrapper && !assistantWrapper.contains(e.target)) {
+                chatPanel.classList.remove('open');
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && chatPanel.classList.contains('open')) {
+                chatPanel.classList.remove('open');
+            }
+        });
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            sendQuery(chatInput.value);
+        });
+
+        presetChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const question = chip.dataset.question;
+                if (question) {
+                    sendQuery(question);
+                }
+            });
+        });
+
+        initHistory();
+    }
+
+    // =======================================================
     // INITIALIZATION
     // =======================================================
     initHabits();
     updateRing();
     saveState();
+    initAiAssistant();
 
     // If settled, lock controls
     if (state.settled) {
@@ -784,3 +1070,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+

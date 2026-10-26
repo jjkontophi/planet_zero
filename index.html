@@ -360,6 +360,101 @@
         </div>
     </div>
 
+    <!-- ========== AI Carbon Assistant Floating Widget ========== -->
+    <div class="ai-assistant-wrapper" id="ai-assistant-wrapper">
+        <!-- Floating Prompt Bubble / Tooltip -->
+        <div class="ai-fab-tooltip" id="ai-fab-tooltip">
+            <span class="ai-tooltip-icon">🌱</span>
+            <span class="ai-tooltip-text">有減碳疑問？點我問 AI 助手！</span>
+            <button class="ai-tooltip-close" id="ai-tooltip-close" aria-label="關閉提示"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Floating Trigger Button -->
+        <button class="ai-fab-btn" id="ai-fab-btn" aria-label="開啟 Planet Zero 減碳 AI 助手">
+            <div class="ai-fab-pulse"></div>
+            <div class="ai-fab-icon-wrap">
+                <i class="fa-solid fa-robot ai-fab-icon-main"></i>
+                <i class="fa-solid fa-sparkles ai-fab-sparkle"></i>
+            </div>
+            <span class="ai-fab-status-dot" title="AI 在線中"></span>
+        </button>
+
+        <!-- AI Chat Window / Panel -->
+        <div class="ai-chat-panel" id="ai-chat-panel" role="dialog" aria-label="Planet Zero 減碳小助手對話視窗">
+            <!-- Header -->
+            <div class="ai-chat-header">
+                <div class="ai-chat-header-info">
+                    <div class="ai-avatar-badge">
+                        <i class="fa-solid fa-robot"></i>
+                        <span class="ai-badge-dot"></span>
+                    </div>
+                    <div class="ai-header-titles">
+                        <h4>Planet Zero 減碳小助手</h4>
+                        <span class="ai-header-sub">
+                            <span class="ai-live-indicator"></span>在線解答 · 零碳生活顧問
+                        </span>
+                    </div>
+                </div>
+                <div class="ai-chat-header-actions">
+                    <button class="ai-btn-action" id="ai-chat-clear" title="清空對話紀錄" aria-label="清空對話">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button class="ai-btn-action" id="ai-chat-close" title="收起小助手" aria-label="關閉視窗">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages Container -->
+            <div class="ai-chat-messages" id="ai-chat-messages">
+                <!-- Welcome & message bubbles injected by JS -->
+            </div>
+
+            <!-- Preset Questions (界面的下面出現預設問題，讓使用者可以選擇) -->
+            <div class="ai-preset-section" id="ai-preset-section">
+                <div class="ai-preset-header">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span>推薦減碳提問：</span>
+                </div>
+                <div class="ai-preset-chips" id="ai-preset-chips">
+                    <button class="ai-preset-chip" data-question="吃素一天可以減少多少碳排放？">
+                        🥗 吃素一天減多少碳？
+                    </button>
+                    <button class="ai-preset-chip" data-question="光盤行動對減緩氣候暖化有什麼具體幫助？">
+                        🍱 光盤行動為什麼能減碳？
+                    </button>
+                    <button class="ai-preset-chip" data-question="日常生活中大家最容易做到的零碳生活妙招有哪些？">
+                        💡 日常減碳小妙招
+                    </button>
+                    <button class="ai-preset-chip" data-question="食物浪費造成的全球碳排放有多嚴重？">
+                        ⚡ 剩食對氣候的衝擊
+                    </button>
+                    <button class="ai-preset-chip" data-question="自備環保杯與環保餐具有哪些實質減碳效益？">
+                        🥤 自備環保杯餐具效益
+                    </button>
+                    <button class="ai-preset-chip" data-question="如何在 Planet Zero 最快提升綠化進度並升級星球？">
+                        🪐 Planet Zero 升級攻略
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <form class="ai-chat-input-bar" id="ai-chat-form">
+                <input 
+                    type="text" 
+                    id="ai-chat-input" 
+                    class="ai-chat-input" 
+                    placeholder="問問減碳、光盤或綠色生活問題..." 
+                    maxlength="200" 
+                    autocomplete="off"
+                >
+                <button type="submit" id="ai-chat-send-btn" class="ai-chat-send-btn" aria-label="發送訊息">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div id="toast-container" aria-live="polite"></div>
 
