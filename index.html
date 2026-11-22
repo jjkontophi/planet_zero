@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-TW" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Planet Zero — 每日減碳行動追蹤</title>
     <meta name="description" content="透過 Planet Zero 追蹤每日減碳行動，培育你的專屬星球，讓環保成為一種習慣。">
+    <script src="i18n.js"></script>
     <link rel="icon" type="image/jpeg" href="logo.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="app">
         <!-- ========== Desktop Sidebar ========== -->
@@ -22,23 +26,36 @@
             <nav class="sidebar-nav">
                 <button class="sidebar-item active" data-target="view-home" id="sidebar-home">
                     <i class="fa-solid fa-globe"></i>
-                    <span>星球培育</span>
+                    <span data-i18n="navPlanet">星球培育</span>
                 </button>
                 <button class="sidebar-item" data-target="view-camera" id="sidebar-camera">
                     <i class="fa-solid fa-camera"></i>
-                    <span>光盤打卡</span>
+                    <span data-i18n="navCamera">光盤打卡</span>
                 </button>
                 <button class="sidebar-item" data-target="view-summary" id="sidebar-summary">
                     <i class="fa-solid fa-chart-pie"></i>
-                    <span>零碳結算</span>
+                    <span data-i18n="navSummary">零碳結算</span>
+                </button>
+                <button class="sidebar-item" data-target="view-events" id="sidebar-events">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-i18n="navEvents">近期活動</span>
                 </button>
             </nav>
             <div class="sidebar-footer">
                 <button class="theme-toggle-btn" id="theme-toggle-desktop">
                     <i class="fa-solid fa-sun theme-icon-light"></i>
                     <i class="fa-solid fa-moon theme-icon-dark"></i>
-                    <span class="toggle-label">切換主題</span>
+                    <span class="toggle-label" data-i18n="toggleTheme">切換主題</span>
                 </button>
+                <!-- Language Toggle (Desktop) -->
+                <div class="lang-toggle-wrap" id="lang-toggle-desktop">
+                    <span class="lang-toggle-label">🌐</span>
+                    <button class="lang-btn" id="lang-btn-zh" data-lang="zh-TW">中文</button>
+                    <div class="lang-slider-track">
+                        <div class="lang-slider-thumb" id="lang-slider-thumb"></div>
+                    </div>
+                    <button class="lang-btn" id="lang-btn-en" data-lang="en">EN</button>
+                </div>
             </div>
         </aside>
 
@@ -50,10 +67,20 @@
                     <img src="logo.jpg" alt="Planet Zero Logo" class="brand-logo-m">
                     <h1 class="mobile-title">Planet Zero</h1>
                 </div>
-                <button class="theme-toggle-btn-mobile" id="theme-toggle-mobile" aria-label="Toggle theme">
-                    <i class="fa-solid fa-sun theme-icon-light"></i>
-                    <i class="fa-solid fa-moon theme-icon-dark"></i>
-                </button>
+                <div class="mobile-header-actions">
+                    <!-- Language Toggle (Mobile) -->
+                    <div class="lang-toggle-wrap mobile" id="lang-toggle-mobile">
+                        <button class="lang-btn" id="lang-btn-zh-m" data-lang="zh-TW">中</button>
+                        <div class="lang-slider-track">
+                            <div class="lang-slider-thumb" id="lang-slider-thumb-m"></div>
+                        </div>
+                        <button class="lang-btn" id="lang-btn-en-m" data-lang="en">EN</button>
+                    </div>
+                    <button class="theme-toggle-btn-mobile" id="theme-toggle-mobile" aria-label="Toggle theme">
+                        <i class="fa-solid fa-sun theme-icon-light"></i>
+                        <i class="fa-solid fa-moon theme-icon-dark"></i>
+                    </button>
+                </div>
             </header>
 
             <!-- ===== View: Home — Planet Cultivation ===== -->
@@ -65,13 +92,13 @@
                             <!-- Planet Stage Badge -->
                             <div class="planet-stage-badge" id="planet-stage-badge">
                                 <span class="stage-dot"></span>
-                                <span id="planet-stage-text">清理程度 0% · 初始荒蕪</span>
+                                <span id="planet-stage-text" data-i18n="stageBadge">清理程度 0% · 初始荒蕪</span>
                             </div>
 
                             <div class="planet-ring-wrapper">
                                 <svg class="progress-ring" viewBox="0 0 220 220" aria-label="Planet energy progress">
-                                    <circle cx="110" cy="110" r="96" class="ring-track"/>
-                                    <circle cx="110" cy="110" r="96" class="ring-fill" id="progress-ring-fill"/>
+                                    <circle cx="110" cy="110" r="96" class="ring-track" />
+                                    <circle cx="110" cy="110" r="96" class="ring-fill" id="progress-ring-fill" />
                                 </svg>
                                 <div class="planet-img-frame" id="planet-img-frame">
                                     <img id="planet-img" src="images/0.jpg" alt="Planet Cleaning Progress">
@@ -117,58 +144,63 @@
                             </div>
 
                             <button class="btn-pill ghost btn-explore" id="btn-change-bg">
-                                <i class="fa-solid fa-book-atlas"></i> 淨化階段圖鑑
+                                <i class="fa-solid fa-book-atlas"></i> <span data-i18n="btnExplore">淨化階段圖鑑</span>
                             </button>
                         </div>
 
                         <!-- Daily Green Habits -->
                         <div class="card daily-tasks-card">
                             <div class="card-head">
-                                <h3>🌿 今日綠色習慣</h3>
+                                <h3 data-i18n="dailyHabitsTitle">🌿 今日綠色習慣</h3>
                             </div>
                             <div class="task-list" id="task-list">
                                 <label class="task-item" for="cb-cup">
-                                    <input type="checkbox" id="cb-cup" class="task-checkbox" data-task-id="task-cup" data-points="10" data-carbon="0.2">
+                                    <input type="checkbox" id="cb-cup" class="task-checkbox" data-task-id="task-cup"
+                                        data-points="10" data-carbon="0.2">
                                     <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
                                     <span class="task-info">
-                                        <span class="task-name">自備環保杯</span>
-                                        <span class="task-desc">減少一次性紙杯使用</span>
+                                        <span class="task-name" data-i18n="taskCupName">自備環保杯</span>
+                                        <span class="task-desc" data-i18n="taskCupDesc">減少一次性紙杯使用</span>
                                     </span>
                                     <span class="task-pts">+10</span>
                                 </label>
                                 <label class="task-item" for="cb-bag">
-                                    <input type="checkbox" id="cb-bag" class="task-checkbox" data-task-id="task-bag" data-points="15" data-carbon="0.3">
+                                    <input type="checkbox" id="cb-bag" class="task-checkbox" data-task-id="task-bag"
+                                        data-points="15" data-carbon="0.3">
                                     <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
                                     <span class="task-info">
-                                        <span class="task-name">使用環保袋</span>
-                                        <span class="task-desc">購物自備環保袋</span>
+                                        <span class="task-name" data-i18n="taskBagName">使用環保袋</span>
+                                        <span class="task-desc" data-i18n="taskBagDesc">購物自備環保袋</span>
                                     </span>
                                     <span class="task-pts">+15</span>
                                 </label>
                                 <label class="task-item" for="cb-transport">
-                                    <input type="checkbox" id="cb-transport" class="task-checkbox" data-task-id="task-transport" data-points="20" data-carbon="1.5">
+                                    <input type="checkbox" id="cb-transport" class="task-checkbox"
+                                        data-task-id="task-transport" data-points="20" data-carbon="1.5">
                                     <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
                                     <span class="task-info">
-                                        <span class="task-name">搭乘大眾運輸</span>
-                                        <span class="task-desc">選擇公車或捷運出行</span>
+                                        <span class="task-name" data-i18n="taskTransportName">搭乘大眾運輸</span>
+                                        <span class="task-desc" data-i18n="taskTransportDesc">選擇公車或捷運出行</span>
                                     </span>
                                     <span class="task-pts">+20</span>
                                 </label>
                                 <label class="task-item" for="cb-stairs">
-                                    <input type="checkbox" id="cb-stairs" class="task-checkbox" data-task-id="task-stairs" data-points="10" data-carbon="0.1">
+                                    <input type="checkbox" id="cb-stairs" class="task-checkbox"
+                                        data-task-id="task-stairs" data-points="10" data-carbon="0.1">
                                     <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
                                     <span class="task-info">
-                                        <span class="task-name">爬樓梯取代電梯</span>
-                                        <span class="task-desc">節能減碳從小事做起</span>
+                                        <span class="task-name" data-i18n="taskStairsName">爬樓梯取代電梯</span>
+                                        <span class="task-desc" data-i18n="taskStairsDesc">節能減碳從小事做起</span>
                                     </span>
                                     <span class="task-pts">+10</span>
                                 </label>
                                 <label class="task-item" for="cb-light">
-                                    <input type="checkbox" id="cb-light" class="task-checkbox" data-task-id="task-light" data-points="5" data-carbon="0.05">
+                                    <input type="checkbox" id="cb-light" class="task-checkbox" data-task-id="task-light"
+                                        data-points="5" data-carbon="0.05">
                                     <span class="cb-visual"><i class="fa-solid fa-leaf"></i></span>
                                     <span class="task-info">
-                                        <span class="task-name">隨手關燈省電</span>
-                                        <span class="task-desc">離開房間即關閉電源</span>
+                                        <span class="task-name" data-i18n="taskLightName">隨手關燈省電</span>
+                                        <span class="task-desc" data-i18n="taskLightDesc">離開房間即關閉電源</span>
                                     </span>
                                     <span class="task-pts">+5</span>
                                 </label>
@@ -183,7 +215,7 @@
                 <div class="view-scroll">
                     <div class="view-inner camera-inner">
                         <div class="section-header">
-                            <h2>📸 光盤行動</h2>
+                            <h2 data-i18n="cameraTitle">📸 光盤行動</h2>
                             <div class="pts-badge" id="camera-pts-badge">
                                 <i class="fa-solid fa-star"></i>
                                 <span id="current-points-camera">0</span> Pts
@@ -194,13 +226,14 @@
                             <div class="img-preview" id="img-preview-box">
                                 <div class="preview-empty" id="preview-empty">
                                     <i class="fa-solid fa-camera-retro"></i>
-                                    <p>拍攝空盤以獲取能量</p>
+                                    <p data-i18n="previewEmptyText">拍攝空盤以獲取能量</p>
                                 </div>
                                 <img id="preview-img" src="" alt="Photo Preview">
                                 <!-- AI Analyzing Overlay -->
                                 <div class="ai-analyzing-overlay" id="ai-analyzing-overlay">
                                     <div class="ai-scan-line"></div>
-                                    <div class="ai-label"><i class="fa-solid fa-robot"></i> AI 辨識分析中…</div>
+                                    <div class="ai-label"><i class="fa-solid fa-robot"></i> <span
+                                            data-i18n="aiAnalyzing">AI 辨識分析中…</span></div>
                                 </div>
                             </div>
                             <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
@@ -211,17 +244,20 @@
                                     <i class="fa-solid fa-robot"></i>
                                 </div>
                                 <div class="ai-result-content">
-                                    <p class="ai-result-verdict" id="ai-result-verdict">分析中…</p>
+                                    <p class="ai-result-verdict" id="ai-result-verdict" data-i18n="aiResultVerdict">分析中…
+                                    </p>
                                     <p class="ai-result-detail" id="ai-result-detail"></p>
                                 </div>
                             </div>
 
                             <div class="camera-btns">
                                 <button class="btn-pill primary large" id="btn-open-camera">
-                                    <i class="fa-solid fa-camera"></i> 開啟相機
+                                    <i class="fa-solid fa-camera"></i> <span data-i18n="btnOpenCamera">開啟相機</span>
                                 </button>
                                 <button class="btn-pill secondary" id="btn-submit-photo" disabled>
-                                    <span class="btn-label"><i class="fa-solid fa-robot" style="margin-right:6px"></i>AI 審核上傳</span>
+                                    <span class="btn-label"><i class="fa-solid fa-robot"
+                                            style="margin-right:6px"></i><span data-i18n="btnAISubmit">AI
+                                            審核上傳</span></span>
                                     <i class="fa-solid fa-spinner fa-spin spin-icon"></i>
                                 </button>
                             </div>
@@ -235,12 +271,12 @@
                 <div class="view-scroll">
                     <div class="view-inner summary-inner">
                         <div class="section-header">
-                            <h2>📊 零碳總結</h2>
+                            <h2 data-i18n="summaryTitle">📊 零碳總結</h2>
                         </div>
 
                         <div class="summary-grid">
                             <div class="card stat-card">
-                                <p class="stat-label">今日減碳總量</p>
+                                <p class="stat-label" data-i18n="statLabel">今日減碳總量</p>
                                 <div class="stat-display">
                                     <span class="stat-number" id="total-carbon-val">0.0</span>
                                     <span class="stat-unit">kg CO₂e</span>
@@ -251,18 +287,26 @@
                             <div class="card lifetime-card">
                                 <div class="lifetime-grid">
                                     <div class="lifetime-item">
-                                        <span class="lifetime-label"><i class="fa-solid fa-seedling"></i> 歷程累計減碳</span>
-                                        <div class="lifetime-value"><span id="lifetime-carbon-val">0.0</span> <small>kg</small></div>
+                                        <span class="lifetime-label"><i class="fa-solid fa-seedling"></i> <span
+                                                data-i18n="lifetimeCarbonLabel">歷程累計減碳</span></span>
+                                        <div class="lifetime-value"><span id="lifetime-carbon-val">0.0</span>
+                                            <small>kg</small>
+                                        </div>
                                     </div>
                                     <div class="lifetime-divider"></div>
                                     <div class="lifetime-item">
-                                        <span class="lifetime-label"><i class="fa-solid fa-trophy"></i> 歷程累計點數</span>
-                                        <div class="lifetime-value"><span id="lifetime-pts-val">0</span> <small>Pts</small></div>
+                                        <span class="lifetime-label"><i class="fa-solid fa-trophy"></i> <span
+                                                data-i18n="lifetimePtsLabel">歷程累計點數</span></span>
+                                        <div class="lifetime-value"><span id="lifetime-pts-val">0</span>
+                                            <small>Pts</small>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="cookie-status-strip">
-                                    <span class="cookie-indicator"><i class="fa-solid fa-cookie-bite"></i> Cookie 已儲存歷史進度</span>
-                                    <span class="cookie-time" id="cookie-last-saved">進度已自動同步</span>
+                                    <span class="cookie-indicator"><i class="fa-solid fa-cookie-bite"></i> <span
+                                            data-i18n="cookieStatus">Cookie 已儲存歷史進度</span></span>
+                                    <span class="cookie-time" id="cookie-last-saved"
+                                        data-i18n="cookieSynced">進度已自動同步</span>
                                 </div>
                             </div>
 
@@ -270,46 +314,108 @@
                                 <div class="accordion" id="accordion">
                                     <details open>
                                         <summary>
-                                            <span class="acc-title"><i class="fa-solid fa-utensils"></i> 光盤行動</span>
+                                            <span class="acc-title"><i class="fa-solid fa-utensils"></i> <span
+                                                    data-i18n="accCamera">光盤行動</span></span>
                                             <span class="acc-val" id="summary-camera-val">0.0 kg</span>
                                         </summary>
                                         <div class="acc-body" id="summary-camera-details">
-                                            <div class="detail-row"><span>尚無紀錄</span><span>0.0 kg</span></div>
+                                            <div class="detail-row"><span data-i18n="noRecord">尚無紀錄</span><span>0.0
+                                                    kg</span></div>
                                         </div>
                                     </details>
                                     <details open>
                                         <summary>
-                                            <span class="acc-title"><i class="fa-solid fa-leaf"></i> 習慣養成</span>
+                                            <span class="acc-title"><i class="fa-solid fa-leaf"></i> <span
+                                                    data-i18n="accHabits">習慣養成</span></span>
                                             <span class="acc-val" id="summary-habits-val">0.0 kg</span>
                                         </summary>
                                         <div class="acc-body" id="summary-habits-details">
-                                            <div class="detail-row"><span>尚無紀錄</span><span>0.0 kg</span></div>
+                                            <div class="detail-row"><span data-i18n="noRecord">尚無紀錄</span><span>0.0
+                                                    kg</span></div>
                                         </div>
                                     </details>
                                     <details open>
                                         <summary>
-                                            <span class="acc-title"><i class="fa-solid fa-clock-rotate-left"></i> 過去紀錄 (Cookie 儲存)</span>
+                                            <span class="acc-title"><i class="fa-solid fa-clock-rotate-left"></i> <span
+                                                    data-i18n="accHistory">過去紀錄 (Cookie 儲存)</span></span>
                                             <span class="acc-val" id="summary-history-count">0 天</span>
                                         </summary>
                                         <div class="acc-body" id="summary-history-details">
-                                            <div class="detail-row"><span>尚無歷史紀錄</span><span>結算後存入</span></div>
+                                            <div class="detail-row"><span data-i18n="noHistory">尚無歷史紀錄</span><span
+                                                    data-i18n="historyAfterSettle">結算後存入</span></div>
                                         </div>
                                     </details>
                                 </div>
 
                                 <button class="btn-pill primary full-width checkout-btn" id="btn-checkout">
-                                    確認結算，注入星球能量
+                                    <span data-i18n="btnCheckout">確認結算，注入星球能量</span>
                                 </button>
 
                                 <div class="share-section" id="share-menu">
-                                    <p class="share-label">分享你的環保成就！</p>
+                                    <p class="share-label" data-i18n="shareLabel">分享你的環保成就！</p>
                                     <div class="share-row">
-                                        <button class="share-circle ig" aria-label="Share to Instagram"><i class="fa-brands fa-instagram"></i></button>
-                                        <button class="share-circle line" aria-label="Share to LINE"><i class="fa-brands fa-line"></i></button>
-                                        <button class="share-circle native" id="btn-share-native" aria-label="Share"><i class="fa-solid fa-share-nodes"></i></button>
+                                        <button class="share-circle ig" aria-label="Share to Instagram"><i
+                                                class="fa-brands fa-instagram"></i></button>
+                                        <button class="share-circle line" aria-label="Share to LINE"><i
+                                                class="fa-brands fa-line"></i></button>
+                                        <button class="share-circle native" id="btn-share-native" aria-label="Share"><i
+                                                class="fa-solid fa-share-nodes"></i></button>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== View: Events — 近期減碳活動 ========== -->
+            <section id="view-events" class="view">
+                <div class="view-scroll">
+                    <div class="view-inner events-inner">
+                        <div class="section-header">
+                            <h2 data-i18n="eventsTitle">📅 近期減碳活動</h2>
+                        </div>
+
+                        <!-- Platform link banner -->
+                        <div class="events-platform-banner">
+                            <div class="events-platform-info">
+                                <span class="events-platform-logo">🌿</span>
+                                <div>
+                                    <p class="events-platform-name" data-i18n="eventsPlatformName">淨零綠生活資訊平台</p>
+                                    <p class="events-platform-sub" data-i18n="eventsPlatformSub">環境部官方減碳活動資訊</p>
+                                </div>
+                            </div>
+                            <a href="https://greenlifestyle.moenv.gov.tw/searchEvent"
+                               target="_blank" rel="noopener noreferrer"
+                               class="btn-pill primary events-platform-btn">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span data-i18n="eventsBrowseAll">瀏覽全部活動</span>
+                            </a>
+                        </div>
+
+                        <!-- Loading state -->
+                        <div class="events-loading" id="events-loading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            <span data-i18n="eventsLoading">載入活動中…</span>
+                        </div>
+
+                        <!-- Error / fallback notice -->
+                        <div class="events-fallback-notice" id="events-fallback-notice" style="display:none;">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span data-i18n="eventsFallbackNotice">顯示備援活動資料，點擊「瀏覽全部活動」可查看最新內容</span>
+                        </div>
+
+                        <!-- Event cards container -->
+                        <div class="events-list" id="events-list"></div>
+
+                        <!-- Footer platform link -->
+                        <div class="events-footer">
+                            <a href="https://greenlifestyle.moenv.gov.tw/"
+                               target="_blank" rel="noopener noreferrer"
+                               class="btn-pill ghost events-footer-btn">
+                                <i class="fa-solid fa-leaf"></i>
+                                <span data-i18n="eventsFooterBtn">前往淨零綠生活資訊平台</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -319,14 +425,18 @@
             <nav class="bottom-nav" id="bottom-nav">
                 <button class="bnav-item" data-target="view-camera" id="bnav-camera">
                     <i class="fa-solid fa-camera"></i>
-                    <span>光盤打卡</span>
+                    <span data-i18n="bnavCamera">光盤打卡</span>
                 </button>
                 <button class="bnav-item fab active" data-target="view-home" id="bnav-home">
                     <i class="fa-solid fa-globe"></i>
                 </button>
                 <button class="bnav-item" data-target="view-summary" id="bnav-summary">
                     <i class="fa-solid fa-chart-pie"></i>
-                    <span>零碳結算</span>
+                    <span data-i18n="bnavSummary">零碳結算</span>
+                </button>
+                <button class="bnav-item" data-target="view-events" id="bnav-events">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span data-i18n="bnavEvents">近期活動</span>
                 </button>
             </nav>
         </div>
@@ -338,56 +448,66 @@
             <div class="modal-handle"></div>
             <div class="modal-head">
                 <div>
-                    <h3>🪐 星球淨化階段圖鑑</h3>
-                    <p class="modal-sub">累積減碳點數以淨化星球，共 5 個進化階段</p>
+                    <h3 data-i18n="galleryTitle">🪐 星球淨化階段圖鑑</h3>
+                    <p class="modal-sub" data-i18n="gallerySub">累積減碳點數以淨化星球，共 5 個進化階段</p>
                 </div>
-                <button class="btn-icon-close" id="btn-close-gallery" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                <button class="btn-icon-close" id="btn-close-gallery" aria-label="Close"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="planet-grid" id="planet-gallery-grid">
                 <!-- 0% -->
                 <div class="planet-grid-item" data-pct="0" data-bg="images/0.jpg" data-name="荒蕪星球 (0%)" data-req="0">
                     <div class="planet-thumb-wrap">
                         <img src="images/0.jpg" alt="0% Clean">
-                        <span class="gallery-tag unlocked"><i class="fa-solid fa-circle-check"></i> 初始</span>
+                        <span class="gallery-tag unlocked"><i class="fa-solid fa-circle-check"></i> <span
+                                data-i18n="galleryTag0">初始</span></span>
                     </div>
-                    <p class="stage-title">0% 荒蕪污染</p>
-                    <span class="stage-pts-label">0 Pts 解鎖</span>
+                    <p class="stage-title" data-i18n="galleryStage0">0% 荒蕪污染</p>
+                    <span class="stage-pts-label" data-i18n="galleryPts0">0 Pts 解鎖</span>
                 </div>
                 <!-- 25% -->
-                <div class="planet-grid-item" data-pct="25" data-bg="images/25.jpg" data-name="微光星球 (25%)" data-req="50">
+                <div class="planet-grid-item" data-pct="25" data-bg="images/25.jpg" data-name="微光星球 (25%)"
+                    data-req="50">
                     <div class="planet-thumb-wrap">
                         <img src="images/25.jpg" alt="25% Clean">
-                        <span class="gallery-tag" id="gtag-25"><i class="fa-solid fa-lock"></i> 需 50 pt</span>
+                        <span class="gallery-tag" id="gtag-25"><i class="fa-solid fa-lock"></i> <span
+                                data-i18n="galleryNeed25">需 50 pt</span></span>
                     </div>
-                    <p class="stage-title">25% 微光復甦</p>
-                    <span class="stage-pts-label">50 Pts 解鎖</span>
+                    <p class="stage-title" data-i18n="galleryStage25">25% 微光復甦</p>
+                    <span class="stage-pts-label" data-i18n="galleryPts25">50 Pts 解鎖</span>
                 </div>
                 <!-- 50% -->
-                <div class="planet-grid-item" data-pct="50" data-bg="images/50.png" data-name="萌發星球 (50%)" data-req="200">
+                <div class="planet-grid-item" data-pct="50" data-bg="images/50.png" data-name="萌發星球 (50%)"
+                    data-req="200">
                     <div class="planet-thumb-wrap">
                         <img src="images/50.png" alt="50% Clean">
-                        <span class="gallery-tag" id="gtag-50"><i class="fa-solid fa-lock"></i> 需 200 pt</span>
+                        <span class="gallery-tag" id="gtag-50"><i class="fa-solid fa-lock"></i> <span
+                                data-i18n="galleryNeed50">需 200 pt</span></span>
                     </div>
-                    <p class="stage-title">50% 生機萌發</p>
-                    <span class="stage-pts-label">200 Pts 解鎖</span>
+                    <p class="stage-title" data-i18n="galleryStage50">50% 生機萌發</p>
+                    <span class="stage-pts-label" data-i18n="galleryPts50">200 Pts 解鎖</span>
                 </div>
                 <!-- 75% -->
-                <div class="planet-grid-item" data-pct="75" data-bg="images/75.png" data-name="繁盛綠洲 (75%)" data-req="500">
+                <div class="planet-grid-item" data-pct="75" data-bg="images/75.png" data-name="繁盛綠洲 (75%)"
+                    data-req="500">
                     <div class="planet-thumb-wrap">
                         <img src="images/75.png" alt="75% Clean">
-                        <span class="gallery-tag" id="gtag-75"><i class="fa-solid fa-lock"></i> 需 500 pt</span>
+                        <span class="gallery-tag" id="gtag-75"><i class="fa-solid fa-lock"></i> <span
+                                data-i18n="galleryNeed75">需 500 pt</span></span>
                     </div>
-                    <p class="stage-title">75% 綠意盎然</p>
-                    <span class="stage-pts-label">500 Pts 解鎖</span>
+                    <p class="stage-title" data-i18n="galleryStage75">75% 綠意盎然</p>
+                    <span class="stage-pts-label" data-i18n="galleryPts75">500 Pts 解鎖</span>
                 </div>
                 <!-- 100% -->
-                <div class="planet-grid-item" data-pct="100" data-bg="images/100.jpg" data-name="璀璨零碳星 (100%)" data-req="1000">
+                <div class="planet-grid-item" data-pct="100" data-bg="images/100.jpg" data-name="璀璨零碳星 (100%)"
+                    data-req="1000">
                     <div class="planet-thumb-wrap">
                         <img src="images/100.jpg" alt="100% Clean">
-                        <span class="gallery-tag" id="gtag-100"><i class="fa-solid fa-crown"></i> 需 1000 pt</span>
+                        <span class="gallery-tag" id="gtag-100"><i class="fa-solid fa-crown"></i> <span
+                                data-i18n="galleryNeed100">需 1000 pt</span></span>
                     </div>
-                    <p class="stage-title">100% 璀璨零碳星</p>
-                    <span class="stage-pts-label">1000 Pts 解鎖</span>
+                    <p class="stage-title" data-i18n="galleryStage100">100% 璀璨零碳星</p>
+                    <span class="stage-pts-label" data-i18n="galleryPts100">1000 Pts 解鎖</span>
                 </div>
             </div>
         </div>
@@ -403,20 +523,21 @@
                     <img id="levelup-img" src="images/25.jpg" alt="Purified Planet">
                     <div class="levelup-glow"></div>
                 </div>
-                <h3 id="levelup-title">🎉 星球淨化升級！</h3>
+                <h3 id="levelup-title" data-i18n="levelupTitle">🎉 星球淨化升級！</h3>
                 <p class="levelup-stage" id="levelup-stage">清理程度已提升至 25%</p>
                 <p class="levelup-desc" id="levelup-desc">大氣層透出第一線微光，地表污染正在消退！感謝您的減碳行動！</p>
                 <div class="levelup-metrics">
                     <div class="lm-box">
-                        <span class="lm-label">當前清理程度</span>
+                        <span class="lm-label" data-i18n="lmLabelPct">當前清理程度</span>
                         <span class="lm-val" id="levelup-val-pct">25%</span>
                     </div>
                     <div class="lm-box">
-                        <span class="lm-label">下一階段目標</span>
+                        <span class="lm-label" data-i18n="lmLabelNext">下一階段目標</span>
                         <span class="lm-val" id="levelup-val-next">200 pt (50%)</span>
                     </div>
                 </div>
-                <button class="btn-pill primary full-width" id="btn-close-levelup">太棒了，繼續守護星球！</button>
+                <button class="btn-pill primary full-width" id="btn-close-levelup"
+                    data-i18n="btnCloseLevelup">太棒了，繼續守護星球！</button>
             </div>
         </div>
     </div>
@@ -427,19 +548,19 @@
             <div class="modal-handle"></div>
             <div class="success-body">
                 <div class="success-ring"><i class="fa-solid fa-check"></i></div>
-                <h3>🤖 AI 審核通過！</h3>
-                <p class="ai-modal-reason" id="success-ai-reason">AI 確認您的餐盤已清空</p>
+                <h3 data-i18n="successTitle">🤖 AI 審核通過！</h3>
+                <p class="ai-modal-reason" id="success-ai-reason" data-i18n="successReason">AI 確認您的餐盤已清空</p>
                 <div class="fb-grid">
                     <div class="fb-box">
-                        <span class="fb-label">減碳量</span>
+                        <span class="fb-label" data-i18n="fbLabelCarbon">減碳量</span>
                         <span class="fb-val green">-0.5 kg</span>
                     </div>
                     <div class="fb-box">
-                        <span class="fb-label">獲得點數</span>
+                        <span class="fb-label" data-i18n="fbLabelPts">獲得點數</span>
                         <span class="fb-val amber">+20 Pts</span>
                     </div>
                 </div>
-                <button class="btn-pill primary full-width btn-close-success">繼續探索</button>
+                <button class="btn-pill primary full-width btn-close-success" data-i18n="btnContinue">繼續探索</button>
             </div>
         </div>
     </div>
@@ -450,17 +571,18 @@
             <div class="modal-handle"></div>
             <div class="reject-body">
                 <div class="reject-ring"><i class="fa-solid fa-xmark"></i></div>
-                <h3>❌ AI 審核未通過</h3>
-                <p class="ai-modal-reason" id="reject-ai-reason">AI 判定餐盤中仍有剩餘食物</p>
+                <h3 data-i18n="rejectTitle">❌ AI 審核未通過</h3>
+                <p class="ai-modal-reason" id="reject-ai-reason" data-i18n="rejectReason">AI 判定餐盤中仍有剩餘食物</p>
                 <div class="reject-tips">
-                    <p><i class="fa-solid fa-lightbulb"></i> 小提示</p>
+                    <p><i class="fa-solid fa-lightbulb"></i> <span data-i18n="rejectTipsTitle">小提示</span></p>
                     <ul>
-                        <li>請確保食物已完全吃完</li>
-                        <li>拍攝時請將餐盤置中</li>
-                        <li>確保光線充足、畫面清晰</li>
+                        <li data-i18n="rejectTip1">請確保食物已完全吃完</li>
+                        <li data-i18n="rejectTip2">拍攝時請將餐盤置中</li>
+                        <li data-i18n="rejectTip3">確保光線充足、畫面清晰</li>
                     </ul>
                 </div>
-                <button class="btn-pill secondary full-width btn-close-reject" id="btn-close-reject">重新拍照</button>
+                <button class="btn-pill secondary full-width btn-close-reject" id="btn-close-reject"
+                    data-i18n="btnRetake">重新拍照</button>
             </div>
         </div>
     </div>
@@ -470,8 +592,9 @@
         <!-- Floating Prompt Bubble / Tooltip -->
         <div class="ai-fab-tooltip" id="ai-fab-tooltip">
             <span class="ai-tooltip-icon">🌱</span>
-            <span class="ai-tooltip-text">有減碳疑問？點我問 AI 助手！</span>
-            <button class="ai-tooltip-close" id="ai-tooltip-close" aria-label="關閉提示"><i class="fa-solid fa-xmark"></i></button>
+            <span class="ai-tooltip-text" data-i18n="aiTooltip">有減碳疑問？點我問 AI 助手！</span>
+            <button class="ai-tooltip-close" id="ai-tooltip-close" aria-label="關閉提示"><i
+                    class="fa-solid fa-xmark"></i></button>
         </div>
 
         <!-- Floating Trigger Button -->
@@ -494,17 +617,19 @@
                         <span class="ai-badge-dot"></span>
                     </div>
                     <div class="ai-header-titles">
-                        <h4>Planet Zero 減碳小助手</h4>
+                        <h4 data-i18n="aiChatTitle">Planet Zero 減碳小助手</h4>
                         <span class="ai-header-sub">
-                            <span class="ai-live-indicator"></span>在線解答 · 零碳生活顧問
+                            <span class="ai-live-indicator"></span><span data-i18n="aiChatSub">在線解答 · 零碳生活顧問</span>
                         </span>
                     </div>
                 </div>
                 <div class="ai-chat-header-actions">
-                    <button class="ai-btn-action" id="ai-chat-clear" title="清空對話紀錄" aria-label="清空對話">
+                    <button class="ai-btn-action" id="ai-chat-clear" title="清空對話紀錄" aria-label="清空對話"
+                        data-i18n-title="aiClearTitle">
                         <i class="fa-solid fa-rotate-left"></i>
                     </button>
-                    <button class="ai-btn-action" id="ai-chat-close" title="收起小助手" aria-label="關閉視窗">
+                    <button class="ai-btn-action" id="ai-chat-close" title="收起小助手" aria-label="關閉視窗"
+                        data-i18n-title="aiCloseTitle">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -519,40 +644,36 @@
             <div class="ai-preset-section" id="ai-preset-section">
                 <div class="ai-preset-header">
                     <i class="fa-solid fa-sparkles"></i>
-                    <span>推薦減碳提問：</span>
+                    <span data-i18n="aiPresetHeader">推薦減碳提問：</span>
                 </div>
                 <div class="ai-preset-chips" id="ai-preset-chips">
-                    <button class="ai-preset-chip" data-question="吃素一天可以減少多少碳排放？">
-                        🥗 吃素一天減多少碳？
+                    <button class="ai-preset-chip" data-i18n-question="aiChip1Q" data-question="吃素一天可以減少多少碳排放？">
+                        <span data-i18n="aiChip1">🥗 吃素一天減多少碳？</span>
                     </button>
-                    <button class="ai-preset-chip" data-question="光盤行動對減緩氣候暖化有什麼具體幫助？">
-                        🍱 光盤行動為什麼能減碳？
+                    <button class="ai-preset-chip" data-i18n-question="aiChip2Q" data-question="光盤行動對減緩氣候暖化有什麼具體幫助？">
+                        <span data-i18n="aiChip2">🍱 光盤行動為什麼能減碳？</span>
                     </button>
-                    <button class="ai-preset-chip" data-question="日常生活中大家最容易做到的零碳生活妙招有哪些？">
-                        💡 日常減碳小妙招
+                    <button class="ai-preset-chip" data-i18n-question="aiChip3Q"
+                        data-question="日常生活中大家最容易做到的零碳生活妙招有哪些？">
+                        <span data-i18n="aiChip3">💡 日常減碳小妙招</span>
                     </button>
-                    <button class="ai-preset-chip" data-question="食物浪費造成的全球碳排放有多嚴重？">
-                        ⚡ 剩食對氣候的衝擊
+                    <button class="ai-preset-chip" data-i18n-question="aiChip4Q" data-question="食物浪費造成的全球碳排放有多嚴重？">
+                        <span data-i18n="aiChip4">⚡ 剩食對氣候的衝擊</span>
                     </button>
-                    <button class="ai-preset-chip" data-question="自備環保杯與環保餐具有哪些實質減碳效益？">
-                        🥤 自備環保杯餐具效益
+                    <button class="ai-preset-chip" data-i18n-question="aiChip5Q" data-question="自備環保杯與環保餐具有哪些實質減碳效益？">
+                        <span data-i18n="aiChip5">🥤 自備環保杯餐具效益</span>
                     </button>
-                    <button class="ai-preset-chip" data-question="如何在 Planet Zero 最快提升綠化進度並升級星球？">
-                        🪐 Planet Zero 升級攻略
+                    <button class="ai-preset-chip" data-i18n-question="aiChip6Q"
+                        data-question="如何在 Planet Zero 最快提升綠化進度並升級星球？">
+                        <span data-i18n="aiChip6">🪐 Planet Zero 升級攻略</span>
                     </button>
                 </div>
             </div>
 
             <!-- Input Bar -->
             <form class="ai-chat-input-bar" id="ai-chat-form">
-                <input 
-                    type="text" 
-                    id="ai-chat-input" 
-                    class="ai-chat-input" 
-                    placeholder="問問減碳、光盤或綠色生活問題..." 
-                    maxlength="200" 
-                    autocomplete="off"
-                >
+                <input type="text" id="ai-chat-input" class="ai-chat-input" placeholder="問問減碳、光盤或綠色生活問題..."
+                    data-i18n-placeholder="aiPlaceholder" maxlength="200" autocomplete="off">
                 <button type="submit" id="ai-chat-send-btn" class="ai-chat-send-btn" aria-label="發送訊息">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -566,4 +687,5 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="main.js"></script>
 </body>
+
 </html>
